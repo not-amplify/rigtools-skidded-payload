@@ -7,27 +7,72 @@ const uiTemplate = `
 // chrome.fileManagerPrivate.openURL();
 // }
 const managementTemplate = `
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<style>
+  body {
+    background-color: #2d2d2d;
+    font-family: Poppins;
+  }
+  .body {
+    background-color: #2d2d2d;
+    font-family: Poppins;
+  }
 
-<div id="chrome_management_disable_ext">
-<h1> chrome.management Disable Extensions </h1>
-<p> Highly skidded copy of the rigtools utility, with multiple capabilities</p>
-<p> Note that this only works on extensions installed by your administrator </p>
-<button id="payload-1">P1 test payload</button>
+  .title {
+    color: #e5e5e5;
+    font-size: 30px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: #e5e5e5;
+  }
+
+  button {
+    border: none;
+    border-radius: 15px;
+    color: #e5e5e5;
+    background-color: #2d2d2d;
+  }
+
+  button:hover {
+    border: 1px solid #e5e5e5;
+  }
+
+  .payload:hover {
+    color: #d61616;
+    border: 1px solid #d61616;
+  }
+
+  .extension-item {
+    list-style: none;
+    list-style-type: none;
+    color: #e5e5e5;
+  }
+
+  .extension-item-toggle {
+    text-decoration: none;
+    color: #d61616;
+  }
+</style>
+<div class="body" id="chrome_management_disable_ext">
+<h1 class="title"> chrome.management Disable Extensions </h1>
+<p class="subtitle"> Highly skidded copy of the rigtools utility, with multiple capabilities</p>
+<p class="subtitle"> Note that this only works on extensions installed by your administrator </p>
+<button class="payload" id="payload-1">Eval Code</button>
 <br>
-<button id="payload-2">P2 kill mobile guardian(hardcoded id)</button>
+<button class="payload" id="payload-2">Kill extension by id(manual input)</button>
 <br>
-<button id="payload-3">P3 kill extension by id(manual input)</button>
+<button class="payload" id="payload-3">Grab self ID</button>
 <br>
-<button id="payload-4">P4 get self id and alert</button>
-<br>
-<button id="payload-5">P5 kill ext thats running injected code</button>
+<button class="payload" id="payload-4">Self-kill Extension</button>
 <ol class="extlist">
   
 </ol><br/>
 <input type="text" class="extnum" /><button disabled id="toggler">Toggle extension</button>
 </div>
-
-info: DO NOT SHARE, BETA
 `; // TODO: Add CSS for this
 let savedExtList = [];
 const slides = [];
@@ -332,8 +377,10 @@ function updateExtensionStatus(extlist_element) {
         }
         ordlist.push(e);
         const itemElement = document.createElement("li");
+        itemElement.classList.add("extension-item")
         itemElement.textContent = `${e.name} (${e.id}) `;
         const aElem = document.createElement('a');
+        aElem.classList.add("extension-item-toggle")
         aElem.href = "javascript:void(0)";
         aElem.innerText = `${e.enabled ? "enabled" : "disabled"}`;
         aElem.onclick = function () {
@@ -378,6 +425,8 @@ onload = async function x() {
     const container_extensions = document.body.querySelector(
       "#chrome_management_disable_ext",
     );
+    container_extensions.querySelector(".extnum").style.display = "none";
+    container_extensions.querySelector("#toggler").style.display = "none";
     // alert("loading button");
     // alert(container_extensions.querySelector("button"));
     container_extensions.querySelector("#toggler").onclick = async function dx(e) {
@@ -410,14 +459,6 @@ onload = async function x() {
     container_extensions.querySelector("#toggler").disabled = false;
     // payload stuff :D
     container_extensions.querySelector("#payload-1").onclick = async function dx(e) {
-      alert('js works. p1 executed(nothing)');
-    };
-    container_extensions.querySelector("#payload-2").onclick = async function dx(e) {
-      alert('payload 2 executed');
-      chrome.management.setEnabled('fgmafhdohjkdhfaacgbgclmfgkgokgmb', false);
-    };
-    container_extensions.querySelector("#payload-3").onclick = async function dx(e) {
-      alert('payload 3 executed');
       var exttokill;
       while (!exttokill) {
         exttokill = prompt('Extension id?');
@@ -429,13 +470,11 @@ onload = async function x() {
         chrome.management.setEnabled(exttokill, false);
       }
     };
-    container_extensions.querySelector("#payload-4").onclick = async function dx(e) {
-      alert('payload 4 executed');
+    container_extensions.querySelector("#payload-2").onclick = async function dx(e) {
       var alertcurrentid = chrome.runtime.id;
       alert(alertcurrentid);
     };
-    container_extensions.querySelector("#payload-5").onclick = async function dx(e) {
-      alert('payload 5 executed');
+    container_extensions.querySelector("#payload-3").onclick = async function dx(e) {
       var grabidtokill = chrome.runtime.id;
       chrome.management.setEnabled(grabidtokill, false);
     };
