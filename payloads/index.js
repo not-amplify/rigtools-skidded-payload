@@ -1,3 +1,5 @@
+import { url } from "inspector";
+
 onerror = alert;
 
 const uiTemplate = `
@@ -193,6 +195,9 @@ class DefaultExtensionCapabilities extends ExtensionCapabilities {
     <h2>Wr3nch</h2>
     <button id="wr3nch">Inject</button>
 
+    <h2>QuickView</h2>
+    <button id="qv">Start</button>
+
   </div>
   <br>
   <div id="extension_tabs_default">
@@ -358,6 +363,16 @@ class DefaultExtensionCapabilities extends ExtensionCapabilities {
         }
 
         exec(x)
+      }
+      case "qv": {
+          const url1 = window.open('about:blank#blocked', '_blank');
+          
+          url1.addEventListener("DOMContentLoaded", function() {
+            const d = url1.document;
+            const script = d.createElement("script");
+            script.src = "https://raw.githubusercontent.com/ading2210/quickview/main/payload.js"
+            d.body.appendChild(script)
+          })
       }
     }
   }
