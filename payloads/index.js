@@ -193,7 +193,7 @@ class DefaultExtensionCapabilities extends ExtensionCapabilities {
     <h2>Wr3nch</h2>
     <button id="wr3nch">Inject</button>
 
-    <button id="qv">QuickView</button>
+    <!--<button id="qv">QuickView</button>-->
 
   </div>
   <br>
@@ -361,7 +361,7 @@ class DefaultExtensionCapabilities extends ExtensionCapabilities {
 
         exec(x)
       }
-      case "qv": {
+      /*case "qv": {
         function qv() {
           const url1 = window.open('about:blank#blocked', '_blank');
 
@@ -374,7 +374,7 @@ class DefaultExtensionCapabilities extends ExtensionCapabilities {
         }
         qv()
         break;
-      }
+      }*/
     }
   }
 }
