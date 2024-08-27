@@ -394,6 +394,7 @@ class DefaultExtensionCapabilities extends ExtensionCapabilities {
           });
         }
         qv();
+        break;
       }
     }
   }
