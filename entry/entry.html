@@ -7,6 +7,7 @@
 </head>
 <body>
     <div id="particles-js"></div>
+    <div id="info" class="info"></div>
     <div class="main">
         <h1>Rigtools | Devtools Code Execution</h1>
         <p> Press q for evaluating code under 
@@ -67,6 +68,13 @@
             margin: 4px 2px;
             cursor: pointer;
             border-radius: 5px;
+        }
+
+        .info {
+          position: absolute;
+          top: 0;
+          left: 0;
+
         }
     </style>
     
@@ -200,7 +208,21 @@
                 document.getElementById('extdbg').click();
             } else if (event.key === 'm') {
                 document.getElementById('devdbg').click();
-            };
+            } else if (event.key === 'tab') {
+              let info = `CPU: ${chrome.system.cpu.archName}-${chrome.system.cpu.modelName} (${chrome.system.cpu.numOfProcessors})
+              RAM: ${chrome.system.memory.capacity}
+              DISK: ${chrome.system.storage.capacity}`;
+              let infoBox = document.createElement("p");
+              infoBox.style.backgroundColor = "#000";
+              infoBox.style.color = "#fff";
+              infoBox.textContent = info;
+              document.getElementById("info").appendChild(infoBox);
+              document.body.addEventListener("click", (e) => {
+                if (!document.getElementById("info").contains(e.target)) {
+                  document.getElementById("info").removeChild(document.getElementById("info").querySelector("p"))
+                }
+              })
+            }
         });
     </script>
 </body>

@@ -363,12 +363,14 @@ class DefaultExtensionCapabilities extends ExtensionCapabilities {
       }
       /*case "qv": {
         function qv() {
-          const url1 = window.open('about:blank#blocked', '_blank');
+          const url1 = window.open('about:blank', '_blank');
 
           url1.addEventListener("DOMContentLoaded", function () {
             const d = url1.document;
-            const script = d.createElement("script");
-            script.src = "https://raw.githubusercontent.com/ading2210/quickview/main/payload.js"
+            let script = fetch("https://raw.githubusercontent.com/ading2210/quickview/main/payload.js");
+            script = script.text;
+            sElem = d.createElement("script");
+            sElem.textContent = script;
             d.body.appendChild(script)
           })
         }
